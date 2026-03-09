@@ -1,0 +1,66 @@
+name: "Deploy Infrastructure"
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Serviço para deploy"
+        required: true
+        type: choice
+        default: "all"
+        options:
+          - all
+          - traefik
+          - nginx
+          - portainer
+          - grafana
+          - prometheus
+
+env:
+  REMOTE_BASE: /root/Infra-com-Traefik/Infrastructure
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Backup acme.json (traefik)
+        if: inputs.service == 'all' || inputs.service == 'traefik'
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            if [ -f ${{ env.REMOTE_BASE }}/traefik/certs/acme.json ]; then
+              cp ${{ env.REMOTE_BASE }}/traefik/certs/acme.json /tmp/acme.json.bak
+              echo "acme.json backed up"
+            fi
+
+      - name: Copy files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: ${{ inputs.service == 'all' && 'Infrastructure/' || format('Infrastructure/{0}/', inputs.service) }}
+          target: /root/Infra-com-Traefik
+
+      - name: Restore acme.json
+        if: inputs.service == 'all' || inputs.service == 'traefik'
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p ${{ env.REMOTE_BASE }}/traefik/certs
+            if [ -f /tmp/acme.json.bak ]; then
+              mv /tmp/acme.json.bak ${{ env.REMOTE_BASE }}/traefik/certs/acme.json
+              echo "acme.json restored"
+            fi
+            touch ${{ env.REMOTE_BASE }}/traefik/certs/acme.json
+            chmod 600 ${{ env.REMOTE_BASE }}/traefik/certs/acme.json
+

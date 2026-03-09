@@ -1,0 +1,33 @@
+networks:
+  monitoring:
+    external: true
+    name: monitoring
+  production:
+    external: true
+    name: production
+services:
+  grafana:
+    image: grafana/grafana:main-ubuntu
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_SERVER_DOMAIN=traefik.${DOMAIN}
+      - GF_SERVER_ROOT_URL=https://grafana.${DOMAIN}
+      - GF_AUTH_ANONYMOUS_ENABLED=false # Desabilita o login anônimo
+      - GF_AUTH_DISABLE_LOGIN_FORM=false # Mantém login ativado
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - monitoring
+      - production
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)
+      - traefik.http.routers.grafana.entrypoints=websecure
+      - traefik.http.routers.grafana.tls=true
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+      - traefik.docker.network=production
+volumes:
+  grafana_data:
+    driver: local
+    name: grafana_data

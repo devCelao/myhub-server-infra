@@ -1,0 +1,29 @@
+name: "Deploy Backend"
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Serviço para deploy"
+        required: true
+        type: choice
+        default: "all"
+        options:
+          - all
+          - api-catalog
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: ${{ inputs.service == 'all' && 'Backend/' || format('Backend/{0}/', inputs.service) }}
+          target: /root/Infra-com-Traefik

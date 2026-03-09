@@ -1,0 +1,49 @@
+name: "Generate .env"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate .env on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            BASE="/root/Infra-com-Traefik"
+
+            cat > "$BASE/.env" <<'HEADER'
+            # ============================================
+            # Gerado automaticamente via GitHub Actions
+            # Não edite manualmente
+            # ============================================
+            HEADER
+
+            cat >> "$BASE/.env" <<EOF
+
+            # Global
+            DOMAIN=${{ secrets.DOMAIN }}
+
+            # MySQL
+            MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+            MYSQL_USER=${{ secrets.MYSQL_USER }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            MYSQL_EXPORTER_USER=${{ secrets.MYSQL_EXPORTER_USER }}
+            MYSQL_EXPORTER_PASSWORD=${{ secrets.MYSQL_EXPORTER_PASSWORD }}
+            SQL_SCRIPTS_PATH=${{ secrets.SQL_SCRIPTS_PATH }}
+
+            # Backend
+            DOCKERHUB_REPO=${{ secrets.DOCKERHUB_REPO }}
+            IMAGE_TAG=${{ secrets.IMAGE_TAG }}
+            DB_SCHEMA=${{ secrets.DB_SCHEMA }}
+            RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}
+            RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
+            EOF
+
+            chmod 600 "$BASE/.env"
+            echo ".env gerado em $BASE/.env"

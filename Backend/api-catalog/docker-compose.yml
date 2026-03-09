@@ -1,0 +1,35 @@
+networks:
+  production:
+    external: true
+    name: production
+  databases:
+    external: true
+    name: databases
+  messaging:
+    external: true
+    name: messaging
+
+services:
+  api-catalogo:
+    image: ${DOCKERHUB_REPO}:${IMAGE_TAG}
+    container_name: api-catalogo
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Connection__ConnectionString=Server=mysql;Port=3306;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD}
+      - Connection__Schema=${DB_SCHEMA}
+      - MessageQueueConnection__MessageBus=host=rabbitmq;port=5672;username=${RABBITMQ_USER};password=${RABBITMQ_PASSWORD}
+      - Jwt__Audience=${DOMAIN}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api-catalog.rule=Host(`api-catalog.${DOMAIN}`)
+      - traefik.http.routers.api-catalog.entrypoints=websecure
+      - traefik.http.services.api-catalog.loadbalancer.server.port=8080
+      - traefik.http.routers.api-catalog.tls=true
+      - traefik.http.routers.api-catalog.tls.certresolver=letsencrypt
+    networks:
+      - production
+      - databases
+      - messaging

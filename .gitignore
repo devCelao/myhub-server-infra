@@ -1,0 +1,3 @@
+Backend/api-catalog/.env
+Databases/mysql/.env
+Databases/mysql/docker-compose.setup-tables.yml

@@ -1,0 +1,30 @@
+name: "Compose Up Backend"
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Serviço para subir"
+        required: true
+        type: choice
+        options:
+          - api-catalog
+      version:
+        description: "Tag da imagem"
+        required: true
+        type: string
+        default: "latest"
+
+jobs:
+  compose-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compose up
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/Infra-com-Traefik/Backend/${{ inputs.service }}
+            IMAGE_TAG=${{ inputs.version }} docker compose up -d --pull always
