@@ -1,0 +1,42 @@
+networks:
+  databases:
+    external: true
+    name: databases
+  monitoring:
+    external: true
+    name: monitoring
+
+services:
+  redis:
+    image: redis:trixie
+    container_name: redis
+    restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - databases
+
+  redis_exporter:
+    image: oliver006/redis_exporter:alpine
+    container_name: redis_exporter
+    restart: unless-stopped
+    ports:
+      - "9121:9121"
+    env_file:
+      - .env
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - databases
+      - monitoring
+
+
+volumes:
+  redis_data:
+    driver: local
+    name: redis_data

@@ -41,8 +41,13 @@ jobs:
             DOCKERHUB_REPO=${{ secrets.DOCKERHUB_REPO }}
             IMAGE_TAG=${{ secrets.IMAGE_TAG }}
             DB_SCHEMA=${{ secrets.DB_SCHEMA }}
+
+            # RabbitMQ
             RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}
             RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
+
+            # Redis
+            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
             EOF
 
             chmod 600 "$BASE/.env"
