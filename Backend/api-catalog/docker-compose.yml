@@ -11,13 +11,13 @@ networks:
 
 services:
   api-catalogo:
-    image: ${DOCKERHUB_REPO}:${IMAGE_TAG}
+    image: ${DOCKERHUB_REPO}/api-catalogo:${IMAGE_TAG}
     container_name: api-catalogo
     restart: unless-stopped
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
       - Connection__ConnectionString=Server=mysql;Port=3306;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD}
       - Connection__Schema=${DB_SCHEMA}
       - MessageQueueConnection__MessageBus=host=rabbitmq;port=5672;username=${RABBITMQ_USER};password=${RABBITMQ_PASSWORD}
