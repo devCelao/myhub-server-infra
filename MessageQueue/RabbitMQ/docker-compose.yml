@@ -20,9 +20,9 @@ services:
       - "5672:5672"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.rabbitmq.rule=Host(`messaging.facihub.com.br`)
+      - traefik.http.routers.rabbitmq.rule=Host(`messaging.${DOMAIN}`)
       - traefik.http.routers.rabbitmq.entrypoints=websecure
-      - traefik.http.routers.rabbitmq.service=api@internal
+      - traefik.http.routers.rabbitmq.service=rabbitmq
       - traefik.http.routers.rabbitmq.tls=true
       - traefik.http.services.rabbitmq.loadbalancer.server.port=15672
     networks:
