@@ -26,5 +26,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /root/Infra-com-Traefik/Backend/${{ inputs.service }}
+            cd ${{ secrets.DEPLOY_PATH }}/Backend/${{ inputs.service }}
             IMAGE_TAG=${{ inputs.version }} docker compose up -d --pull always

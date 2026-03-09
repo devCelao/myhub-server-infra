@@ -27,4 +27,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: ${{ inputs.service == 'all' && 'Databases/' || format('Databases/{0}/', inputs.service) }}
-          target: /root/Infra-com-Traefik
+          target: ${{ secrets.DEPLOY_PATH }}

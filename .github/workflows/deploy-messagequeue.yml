@@ -1,7 +1,16 @@
-name: "Deploy Frontend"
+name: "Deploy MessageQueue"
 
 on:
   workflow_dispatch:
+    inputs:
+      service:
+        description: "Serviço para deploy"
+        required: true
+        type: choice
+        default: "all"
+        options:
+          - all
+          - RabbitMQ
 
 jobs:
   deploy:
@@ -16,5 +25,5 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "Frontend/"
+          source: ${{ inputs.service == 'all' && 'MessageQueue/' || format('MessageQueue/{0}/', inputs.service) }}
           target: ${{ secrets.DEPLOY_PATH }}

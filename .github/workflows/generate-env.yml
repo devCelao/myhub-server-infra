@@ -14,7 +14,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            BASE="/root/Infra-com-Traefik"
+            BASE="${{ secrets.DEPLOY_PATH }}"
 
             cat > "$BASE/.env" <<'HEADER'
             # ============================================
@@ -27,6 +27,7 @@ jobs:
 
             # Global
             DOMAIN=${{ secrets.DOMAIN }}
+            DEPLOY_PATH=${{ secrets.DEPLOY_PATH }}
 
             # MySQL
             MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
@@ -48,6 +49,10 @@ jobs:
 
             # Redis
             REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+
+            # MessageQueue
+            RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}
+            RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
             EOF
 
             chmod 600 "$BASE/.env"
