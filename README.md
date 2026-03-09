@@ -26,20 +26,20 @@ Infraestrutura completa do servidor VPS (Hostinger) para o domínio **facihub.co
 
 | Rede         | Função                                                    |
 |--------------|-----------------------------------------------------------|
-| `production` | Conecta Traefik aos serviços expostos externamente -------|
-| `monitoring` | Comunicação entre Prometheus, Grafana e exporters --------|
-| `databases` -| Isolamento dos bancos de dados (MySQL, PostgreSQL, Redis) |
+| `production` | Conecta Traefik aos serviços expostos externamente |
+| `monitoring` | Comunicação entre Prometheus, Grafana e exporters|
+| `databases` | Isolamento dos bancos de dados (MySQL, PostgreSQL, Redis) |
 
 ## Serviços expostos
 
 | Serviço           | URL                         |
 |-------------------|-----------------------------|
-| Landing Page -----| `facihub.com.br` -----------|
-| Traefik Dashboard | `traefik.facihub.com.br` ---|
-| Portainer --------| `portainer.facihub.com.br` -|
-| Grafana ----------| `grafana.facihub.com.br` ---|
-| Prometheus -------| `prometheus.facihub.com.br` |
-| PgAdmin ----------| `pgadmin.facihub.com.br` ---|
+| Landing Page  `facihub.com.br` |
+| Traefik Dashboard | `traefik.facihub.com.br` |
+| Portainer  `portainer.facihub.com.br` |
+| Grafana  `grafana.facihub.com.br` |
+| Prometheus  `prometheus.facihub.com.br` |
+| PgAdmin  `pgadmin.facihub.com.br` |
 
 ## Documentação
 

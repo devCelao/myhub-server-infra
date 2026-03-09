@@ -15,6 +15,7 @@
     - [Certificate Resolvers](#certificate-resolvers)
   - [Docker Provider -- Auto-Discovery](#docker-provider----auto-discovery)
     - [Docker Socket](#docker-socket)
+    - [Importante: Labels do Traefik vs Rede Docker](#importante-labels-do-traefik-vs-rede-docker)
     - [Label traefik.enable](#label-traefikenable)
     - [Label traefik.docker.network](#label-traefikdockernetwork)
   - [TLS e Certificados](#tls-e-certificados)
@@ -104,9 +105,9 @@ Entrypoints são as **portas de escuta** do Traefik. São definidos no command d
 
 | Entrypoint  | Porta   | Função                              |
 |-------------|---------|-------------------------------------|
-| `web` ------| `:80` --| Recebe HTTP, redireciona para HTTPS |
-| `websecure` | `:443` -| Recebe HTTPS, entrypoint principal -|
-| `metrics` --| `:8080` | Expõe métricas para o Prometheus ---|
+| `web` | `:80` | Recebe HTTP, redireciona para HTTPS |
+| `websecure` | `:443` | Recebe HTTPS, entrypoint principal |
+| `metrics` | `:8080` | Expõe métricas para o Prometheus |
 
 Configuração real:
 
@@ -189,9 +190,9 @@ command:
 
 | Parâmetro                           | Valor        | Significado                                 |
 |-------------------------------------|--------------|---------------------------------------------|
-| `providers.docker` -----------------| `true` ------| Ativa a integração com Docker --------------|
-| `providers.docker.exposedbydefault` | `false` -----| Containers NÃO são expostos automaticamente |
-| `providers.docker.network` ---------| `production` | Rede padrão para comunicação com containers |
+| `providers.docker` | `true` | Ativa a integração com Docker |
+| `providers.docker.exposedbydefault` | `false` | Containers NÃO são expostos automaticamente |
+| `providers.docker.network` | `production` | Rede padrão para comunicação com containers |
 
 ### Certificate Resolvers
 
@@ -518,8 +519,8 @@ graph TB
 | Rede         | Propósito                                                  | Quem participa                                          |
 |--------------|------------------------------------------------------------|---------------------------------------------------------|
 | `production` | Comunicação entre Traefik e serviços expostos externamente | Traefik, Nginx, Portainer, Grafana, Prometheus, PgAdmin |
-| `monitoring` | Comunicação interna entre ferramentas de monitoramento ----| Prometheus, Grafana, Node Exporter, MySQL/Postgres/Redis Exporters |
-| `databases` -| Isolamento dos bancos de dados ----------------------------| MySQL, PostgreSQL, Redis, PgAdmin (via `production` também), Exporters |
+| `monitoring` | Comunicação interna entre ferramentas de monitoramento | Prometheus, Grafana, Node Exporter, MySQL/Postgres/Redis Exporters |
+| `databases` -| Isolamento dos bancos de dados | MySQL, PostgreSQL, Redis, PgAdmin (via `production` também), Exporters |
 
 Containers como **Grafana** e **Prometheus** participam de **duas redes** simultaneamente:
 - `production` -- para serem acessíveis via Traefik (receber tráfego externo)
