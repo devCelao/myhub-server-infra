@@ -1,0 +1,28 @@
+networks:
+  databases:
+    external: true
+    name: databases
+  production:
+    external: true
+    name: production
+
+services:
+  # ══════════════════════════════════════════════════════════════════════════
+  # MYSQL PROXY - Expõe conexão MySQL via Traefik TCP
+  # Permite conexão de ferramentas locais (Workbench, DBeaver, etc)
+  # Acesse via: mysql://IP-DO-SERVIDOR:3306
+  # ══════════════════════════════════════════════════════════════════════════
+  mysql-proxy:
+    image: alpine/socat:latest
+    container_name: mysql-proxy
+    restart: unless-stopped
+    command: tcp-listen:3306,fork,reuseaddr tcp-connect:mysql:3306
+    labels:
+      - traefik.enable=true
+      - traefik.tcp.routers.mysql-tcp.rule=HostSNI(`*`)
+      - traefik.tcp.routers.mysql-tcp.entrypoints=mysql
+      - traefik.tcp.routers.mysql-tcp.service=mysql-tcp
+      - traefik.tcp.services.mysql-tcp.loadbalancer.server.port=3306
+    networks:
+      - databases
+      - production
