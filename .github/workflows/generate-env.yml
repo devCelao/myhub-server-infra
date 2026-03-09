@@ -25,7 +25,7 @@ jobs:
 
             cat >> "$BASE/.env" <<EOF
 
-            # Global
+            # Host
             DOMAIN=${{ secrets.DOMAIN }}
             DEPLOY_PATH=${{ secrets.DEPLOY_PATH }}
 
@@ -49,6 +49,12 @@ jobs:
 
             # Redis
             REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+
+            # JWT
+            ALGORITHM=${{ secrets.ALGORITHM }}
+            DAYS_UNTIL_EXPIRE=${{ secrets.DAYS_UNTIL_EXPIRE }}
+            KEYS_TO_KEEP=${{ secrets.KEYS_TO_KEEP }}
+            KEY_PREFIX=${{ secrets.KEY_PREFIX }}
 
             EOF
 
