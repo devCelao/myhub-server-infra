@@ -50,9 +50,6 @@ jobs:
             # Redis
             REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
 
-            # MessageQueue
-            RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}
-            RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
             EOF
 
             chmod 600 "$BASE/.env"
