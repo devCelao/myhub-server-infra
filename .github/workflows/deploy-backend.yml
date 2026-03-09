@@ -11,6 +11,9 @@ on:
         options:
           - all
           - api-catalog
+          - api-authentication
+          - api-management
+          - api-payment
 
 jobs:
   deploy:
