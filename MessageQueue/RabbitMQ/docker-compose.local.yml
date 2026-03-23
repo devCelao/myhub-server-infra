@@ -1,0 +1,30 @@
+networks:
+  messaging:
+    name: messaging
+    driver: bridge
+  production:
+    external: true
+    name: production
+
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.rabbitmq.rule=Host(`messaging.${DOMAIN}`)
+      - traefik.http.routers.rabbitmq.entrypoints=web
+      - traefik.http.routers.rabbitmq.service=rabbitmq
+      - traefik.http.services.rabbitmq.loadbalancer.server.port=15672
+    networks:
+      - messaging
+      - production
