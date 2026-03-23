@@ -12,7 +12,7 @@ services:
     container_name: rabbitmq
     restart: unless-stopped
     env_file:
-      - ../../../.env
+      - .env
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
